@@ -21,12 +21,63 @@ public class FiboC {
         return System.currentTimeMillis() - startTime;
     }
 
+    private int findPisanoPeriod(int m) {
+        // Базовый случай
+        if (m == 1) {
+            return 1;
+        }
+
+        long prev = 0;
+        long curr = 1;
+        int period = 0;
+
+        for (int i = 0; i < m * m; i++) {
+            long next = (prev + curr) % m;
+            prev = curr;
+            curr = next;
+
+            // Период начинается с 0,1 и повторяется
+            if (prev == 0 && curr == 1) {
+                period = i + 1;
+                break;
+            }
+        }
+        return period;
+    }
+
     long fasterC(long n, int m) {
         //Интуитивно найти решение не всегда просто и
         //возможно потребуется дополнительный поиск информации
-        return -1L;
+
+        // Тривиальные случаи
+        if (n == 0) {
+            return 0;
+        }
+        if (n == 1) {
+            return 1 % m;
+        }
+
+        // Находим период Пизано для модуля m
+        int period = findPisanoPeriod(m);
+
+        // Уменьшаем n с помощью периода
+        long remainder = n % period;
+
+        // Вычисляем Fib(remainder) mod m
+        if (remainder == 0) {
+            return 0;
+        }
+        if (remainder == 1) {
+            return 1 % m;
+        }
+
+        long prev = 0;
+        long curr = 1;
+        for (int i = 2; i <= remainder; i++) {
+            long next = (prev + curr) % m;
+            prev = curr;
+            curr = next;
+        }
+        return curr % m;
     }
-
-
 }
-
