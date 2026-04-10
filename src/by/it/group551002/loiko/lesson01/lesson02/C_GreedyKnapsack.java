@@ -49,7 +49,31 @@ public class C_GreedyKnapsack {
         //кроме того, можете описать свой компаратор в классе Item
 
         //ваше решение.
+        // Сортируем предметы по удельной стоимости (cost/weight) в порядке убывания
+        // Используем собственный компаратор через лямбда-выражение
+        java.util.Arrays.sort(items, (item1, item2) -> {
+            double ratio1 = (double) item1.cost / item1.weight;
+            double ratio2 = (double) item2.cost / item2.weight;
+            return Double.compare(ratio2, ratio1); // убывание: от большего к меньшему
+        });
 
+        double totalWeight = 0;  // сколько веса уже набрали в рюкзаке
+
+        // Проходим по всем предметам от самых "дорогих" к дешёвым
+        for (Item item : items) {
+            if (totalWeight + item.weight <= W) {
+                // Предмет помещается целиком
+                result += item.cost;
+                totalWeight += item.weight;
+            } else {
+                // Предмет помещается только частично
+                double remainingWeight = W - totalWeight; // сколько свободного места осталось
+                double fraction = remainingWeight / item.weight; // какую часть предмета можем взять
+                result += item.cost * fraction; // добавляем стоимость части предмета
+                totalWeight = W; // рюкзак полностью заполнен
+                break; // выходим из цикла, так как дальше ничего не поместится
+            }
+        }
 
         System.out.printf("Удалось собрать рюкзак на сумму %f\n", result);
         return result;
@@ -67,17 +91,26 @@ public class C_GreedyKnapsack {
         @Override
         public String toString() {
             return "Item{" +
-                   "cost=" + cost +
-                   ", weight=" + weight +
-                   '}';
+                    "cost=" + cost +
+                    ", weight=" + weight +
+                    '}';
         }
 
         @Override
         public int compareTo(Item o) {
             //тут может быть ваш компаратор
+            // Сравниваем по удельной стоимости (cost/weight) в порядке убывания
+            double ratioThis = (double) this.cost / this.weight;
+            double ratioOther = (double) o.cost / o.weight;
 
-
-            return 0;
+            // Возвращаем отрицательное, если this должен идти раньше (выше стоимость за кг)
+            if (ratioThis > ratioOther) {
+                return -1;  // this дороже → должен быть раньше
+            } else if (ratioThis < ratioOther) {
+                return 1;   // other дороже → this позже
+            } else {
+                return 0;   // удельная стоимость равна
+            }
         }
     }
 }
