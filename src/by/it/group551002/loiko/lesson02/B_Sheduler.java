@@ -1,4 +1,4 @@
-    package by.it.group551002.loiko.lesson01.lesson02;
+    package by.it.group551002.loiko.lesson02;
 
     import java.util.ArrayList;
     import java.util.List;

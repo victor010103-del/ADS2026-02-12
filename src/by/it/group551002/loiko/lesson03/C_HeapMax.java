@@ -1,4 +1,4 @@
-package by.it.group551002.loiko.lesson01.lesson03;
+package by.it.group551002.loiko.lesson03;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
